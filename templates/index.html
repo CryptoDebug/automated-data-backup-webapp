@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soumettre un Post</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Soumettre un Post</h1>
+        <form id="data-form" action="/" method="post">
+            <textarea name="content" rows="10" cols="30" placeholder="Écrivez quelque chose...">{{ data }}</textarea><br>
+        </form>
+        <div class="save-status" id="save-status">Dernière sauvegarde : {{ timestamp }}</div>
+    </div>
+    <script>
+      const form = document.getElementById('data-form');
+      const textarea = document.querySelector('textarea');
+      const saveStatus = document.getElementById('save-status');
+
+      function saveData() {
+        const formData = new FormData(form);
+        fetch('/', {
+          method: 'POST',
+          body: formData
+        }).then(response => {
+          if (response.ok) {
+            saveStatus.textContent = 'Données sauvegardées avec succès! Dernière sauvegarde : ' + new Date().toLocaleString();
+          } else {
+            saveStatus.textContent = 'Échec de la sauvegarde des données.';
+          }
+        }).catch(error => {
+          console.error('Error:', error);
+          saveStatus.textContent = 'Échec de la sauvegarde des données.';
+        });
+      }
+      
+      setInterval(saveData, 10000);
+    </script>
+</body>
+</html>
